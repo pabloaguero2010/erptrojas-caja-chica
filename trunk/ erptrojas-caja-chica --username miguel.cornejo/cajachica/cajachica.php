@@ -15,6 +15,12 @@ if ($valnt=$_GET["bd"]==1)
 	if($warning) $warning=$warning." <br> ";
 	$warning=$warning."Ocurrió un error con la base de datos, intente nuevamente";
 	}
+if ($valnt=$_GET["ok"]==8)
+	{
+	if($warning) $warning=$warning." <br> ";
+	$warning=$warning."Debe realizar un ingreso antes de realizar las busquedas!";
+	}
+	
 if ($valnt=$_GET["ok"]==1)
 	{
 	$saldoact=$_GET["saldo"];

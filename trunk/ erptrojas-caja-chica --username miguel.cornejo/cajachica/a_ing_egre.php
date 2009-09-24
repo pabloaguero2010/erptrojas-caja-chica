@@ -58,7 +58,10 @@ $aux2 = pg_fetch_assoc($ssql3);
 $mesal=$aux2[fecha2];
 $fechasal=$aux2[fecha];
 //saldo actual
-$saldoact=$aux2[saldo];
+$sqla = "select sum(saldo) as saldo from caja_chica;";
+$ssqla = pg_exec($dbh,$sqla);
+$auxa = pg_fetch_assoc($ssqla);
+$saldoact=$auxa[saldo];
 
 //$ssql4 = "select * from caja_chica where fecha between '$ano-$mesa-01' and '$ano-$mesa-30'";
 
