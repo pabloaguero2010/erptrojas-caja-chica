@@ -1,0 +1,161 @@
+/* Global Styles */
+
+body {
+	margin:0px;
+	background-image: url(../images/bg.png);
+	background-repeat: repeat-x;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+
+	}
+	
+/* ID Styles */
+
+img {
+    border:none;
+}
+
+input[type="password"] {
+	border: thin #3e3e3d solid;
+	background: transparent;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #cc0000;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+input[type="password"]:hover {
+	border: thin #3e3e3d outset;
+	filter:alpha(opacity=50);-moz-opacity:.5;opacity:.5;
+	background: #FFFFFF;
+	color: #cc0000;
+}
+
+input[type="password"]:focus  {
+	border: thin #cc0000 solid;
+	background: #FFFFFF;
+	color: #cc0000;
+}
+
+input[type="password"]:focus:hover {
+	border: thin #cc0000 solid;
+	filter:alpha(opacity=100);-moz-opacity:1;opacity:1;
+	background: #FFFFFF;
+	color: #cc0000;
+}
+
+
+
+
+
+
+
+
+
+
+
+input[type="text"] {
+	border: thin #3e3e3d solid;
+	background: transparent;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: ##3e3e3d;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+input[type="text"]:hover {
+	border: thin #3e3e3d outset;
+	filter:alpha(opacity=50);-moz-opacity:.5;opacity:.5;
+	background: #FFFFFF;
+	color: #3e3e3d;
+}
+
+input[type="text"]:focus  {
+	border: thin #cc0000 solid;
+	background: #FFFFFF;
+	color: #cc0000;
+}
+
+input[type="text"]:focus:hover {
+	border: thin #cc0000 solid;
+	filter:alpha(opacity=100);-moz-opacity:1;opacity:1;
+	background: #FFFFFF;
+	color: #cc0000;
+}
+
+a:link{ color: #3e3e3d; }
+
+a:visited{ color: #3e3e3d; }
+
+a:hover, a:focus{ color: #3e3e3d;	text-decoration:none; }
+
+
+
+/* caja de advertencias*/
+
+#advertencia {
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	/*background:#fff;*/	
+	border:1px solid #cc0000; 
+	left:0;
+	margin-top:10px;
+	margin-left:10px;
+	margin-right:10px;
+	display:block;
+	
+
+	
+
+}
+
+
+
+/* Class Styles */
+
+
+.textologin {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #3e3e3d;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.botonlogin{
+        font-size:12px;
+        font-family:Verdana,Helvetica;
+        font-weight:bold;
+        color:white;
+        background:#cc0000;
+        border:0px;
+        
+        height:20px;
+}
+
+.botonlogin:hover{
+        font-size:12px;
+        font-family:Verdana,Helvetica;
+        font-weight:bold;
+        color:white;
+        background:#cc0000;
+		filter:alpha(opacity=50);-moz-opacity:.5;opacity:.5;
+        border:0px;
+        
+        height:20px;
+}
+
+.MP {
+	font-size: 24px;
+	font-weight: bold;
+	color: #3e3e3d;
+}
+
+.msjerror {
+	color: #cc0000;
+	font-weight: bold;
+	font-size: 12px;
+}	
+
+.textoform {
+	font-size: 12px;
+	font-weight: bold;
+}	

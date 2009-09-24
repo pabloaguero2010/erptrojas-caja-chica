@@ -1,0 +1,93 @@
+table.to {
+	/*width: 650px;*/
+	border:1px solid #3e3e3d;
+	border-spacing: 0px; }
+/*
+table a, table, tbody, tfoot, tr, th, td {
+	font-family: Arial, Helvetica, sans-serif;
+}*/
+
+/*table caption {
+	font-size: 1.8em;
+	text-align: left;
+	text-indent: 100px;
+	background: url(images/bg_caption.gif) left top;
+	height: 40px;
+	color: #FFFFFF;
+	border:1px solid #3e3e3d; }
+	*/
+
+thead.to th {
+	background:#333333;
+	height: 21px;
+	color: #FFFFFF;
+	font-size: 0.8em;
+	/*font-family: Arial;*/
+	font-weight: bold;
+	padding: 0px 7px;
+	margin: 20px 0px 0px;
+	text-align: left; }
+
+tbody.to tr {	background: #ffffff; }
+
+tbody.to tr.odd {	background: #c3c3c3; }
+
+tbody.to th {
+	/*background: url(images/arrow_white.gif) left center no-repeat;*/
+	background:#3e3e3d;
+	/*background-position: 5px;*/
+	padding-left: 40px !important; }
+
+tbody.to tr.odd th {
+	/*background: url(images/arrow_grey.gif) left center no-repeat;*/
+	background:#c3c3c3;
+	/*background-position: 5px;*/
+	padding-left: 40px !important; }
+
+tbody.to th, tbody.to td {
+	font-size: 0.8em;
+	line-height: 1.4em;
+	/*font-family: Arial, Helvetica, sans-serif;*/
+	color: #3e3e3d;
+	padding: 5px 7px;
+	border-bottom: 1px solid #cc0000;
+	text-align: left; }
+
+tbody.to a {
+	color: #3e3e3d;
+	font-weight: bold;
+	text-decoration: none; }
+
+tbody.to a:hover {
+	color: #ffffff;
+	text-decoration: underline; }
+
+tbody.to tr:hover th {
+	/*background: #800000 url(images/arrow_red.gif) left center no-repeat;*/
+	background: #cc0000;
+	/*background-position: 5px;*/
+	color: #ffffff; }
+
+tbody.to tr.odd:hover th {
+	/*background: #000000 url(images/arrow_black.gif) left center no-repeat;*/
+	background: #3e3e3d;
+	/*background-position: 5px;*/
+	color: #ffffff; }
+
+tbody.to tr:hover th a, tbody.to tr.odd:hover th a	{
+		 color: #ffffff; }
+
+tbody.to tr:hover td, tbody.to tr:hover td a, tbody.to tr.odd:hover td, tbody.to tr.odd:hover td a {
+	background: #cc0000;
+	color: #ffffff;	 }
+
+tbody.to tr.odd:hover td, tbody.to tr.odd:hover td a{
+	background: #3e3e3d;
+	color: #ffffff;	 }
+
+/*tfoot th, tfoot td {
+	background: #ffffff url(images/bg_footer.gif) repeat-x bottom;
+	font-size: 0.8em;
+	color: #ffffff;
+	height: 21px;
+	}*/
