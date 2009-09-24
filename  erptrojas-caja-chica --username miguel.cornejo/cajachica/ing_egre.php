@@ -1,6 +1,6 @@
 <?php
 
-
+  
 //paginacion de los datos
 //Limito la busqueda
 $TAMANO_PAGINA = 20;
@@ -18,10 +18,21 @@ else {
 
 
 require("../conectar.php");
-
- 
-
+/*
+  $ssql2 =  "select id_caja from caja_chica;";
+   $sstat3 = pg_exec($dbh,$ssql2);	
+	 			  
+			  if (!($aux = pg_fetch_assoc($sstat3)))
+			  {
+				//echo "hola";
+				$val="&ok=8";
+				//header("location: cajachica.php?op=gc".$val);
+				header("location: cajachica.php?op=gc".$val.$val2);
+			  }
+*/
 $meses = array("Seleccione Mes","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+
 
 //Ver de donde saco el saldo anterior
 if($_POST[flag]!='1'){
@@ -43,9 +54,10 @@ $ano=$_POST[ano];
 // si es enero
 if ($mesa==0)
 	$mesa=12;
+//echo "año".$ano;
 
 $sql2 = "select sum(saldo) as saldo from caja_chica where date_part('month',fecha) = $mesa and date_part('Year',fecha)=$ano";
-
+//echo "sql2".$sql2;
 $ssql2 = pg_exec($dbh,$sql2);
 $aux = pg_fetch_assoc($ssql2);
 
@@ -62,7 +74,7 @@ $mesal=$aux2[fecha2];
 $fechasal=$aux2[fecha];
 //saldo actual
 
-$sql4 = "select sum(saldo) as saldo from caja_chica where date_part('month',fecha) = $mes_sel and date_part('Year',fecha)=$ano;";
+$sql4 = "select sum(saldo) as saldo from caja_chica;";
 $ssql4 = pg_exec($dbh,$sql4);
 $aux3 = pg_fetch_assoc($ssql4);
 $saldoact=$aux3[saldo];
@@ -129,7 +141,7 @@ $i=0;
 
 $i=0;
 
-echo"<select  name=mes id=mes class='textoform'>"; 
+echo"<select name=mes id=mes class='textoform'>"; 
 
 while ($i<=12)
 {
@@ -138,7 +150,7 @@ $i++;
 }
 echo "</select>"; 
 ?>
-               <?php
+              <?php
 			
 			
 			$ssql2 =  "select distinct on (date_part('Year',fecha)) date_part('Year',fecha) as ano from caja_chica;";
@@ -147,14 +159,22 @@ echo "</select>";
 			
 			
 			echo"<select  name=ano id=ano class='textoform'>"; 
-		 			  
-			  while($aux = pg_fetch_assoc($sstat3))
+		 	
+               if (!($aux = pg_fetch_assoc($sstat3)))
 			  {
-				echo "<option value='".$aux[ano]."'>".$aux[ano]."</option>\n";
-			  }
+				  $ano=date('Y');
+				echo "<option value='".$ano."'>".$ano."</option>\n";
+			  }	
+			  else
+			   {
+			    while($aux = pg_fetch_assoc($sstat3))
+			    {
+				 echo "<option value='".$aux[ano]."'>".$aux[ano]."</option>\n";
+			    }
+			   }
 		echo "</select>"; 
 		?>
-               <input name="enviar" type="submit" id="form_mes" value="Mostrar" class="botonlogin"  />
+              <input name="enviar" type="submit" id="form_mes" value="Mostrar" class="botonlogin"  />
             </div></td>
             <td>&nbsp;</td>
           </tr>
@@ -189,15 +209,17 @@ echo "</select>";
 	     		<th width="9%">Comb.</th>
                 <th width="9%">Reint Comb</th>
                 <th width="9%">Cheques.</th>
-                <th width="9%">Otros Ingr.</th>  
+                <th width="9%">Otros.</th>
+                <th width="9%">Saldo</th>  
 				</tr>
               </thead>
               <tbody class="to"> 
               <?php
 			 
-			  
+			  $saldo=$saldoant;
 			  while($aux = pg_fetch_assoc($sstat2))
 			  {
+			  $saldo=$saldo+$aux[saldo];
 			  
 			  $fecha=$aux[fecha];
 			  $proveedor=$aux[proveedor];
@@ -209,7 +231,7 @@ echo "</select>";
 			  $reintcomb=$aux[reintcomb];
 			  $cheques=$aux[cheques];
 			  $otros=$aux[otros];
-			  $saldo=$aux[saldo];
+			  //$saldo=$aux[saldo];
 			  $cod=$aux[id_caja];
 			  
 		  
@@ -232,6 +254,7 @@ echo "</select>";
                echo "<td>".$reintcomb."</td>";
 			   echo "<td>".$cheques."</td>";
 			   echo "<td>".$otros."</td>";
+			   echo "<td>".$saldo."</td>";
                
                
                

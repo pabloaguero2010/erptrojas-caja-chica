@@ -32,7 +32,7 @@ $total_paginas = ceil($num_total_registros / $TAMANO_PAGINA);
 
 $i=0;
 
-$sql3 = "select saldo,fecha  from caja_chica order by id_caja desc limit 1";
+$sql3 = "select sum(saldo) as saldo from caja_chica where proveedor='$proveedor';";
 //echo"consulta:".$sql3;
 $ssql3 = pg_exec($dbh,$sql3);
 $aux2 = pg_fetch_assoc($ssql3);
