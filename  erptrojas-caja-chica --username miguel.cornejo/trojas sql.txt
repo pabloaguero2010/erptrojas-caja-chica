@@ -1,0 +1,4767 @@
+--
+-- PostgreSQL database dump
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+--
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
+--
+
+CREATE PROCEDURAL LANGUAGE plpgsql;
+
+
+ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: breakpoint; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE breakpoint AS (
+	func oid,
+	linenumber integer,
+	targetname text
+);
+
+
+ALTER TYPE public.breakpoint OWNER TO postgres;
+
+--
+-- Name: chkpass; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE chkpass;
+
+
+--
+-- Name: chkpass_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION chkpass_in(cstring) RETURNS chkpass
+    AS '$libdir/chkpass', 'chkpass_in'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.chkpass_in(cstring) OWNER TO postgres;
+
+--
+-- Name: chkpass_out(chkpass); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION chkpass_out(chkpass) RETURNS cstring
+    AS '$libdir/chkpass', 'chkpass_out'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.chkpass_out(chkpass) OWNER TO postgres;
+
+--
+-- Name: chkpass; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE chkpass (
+    INTERNALLENGTH = 16,
+    INPUT = chkpass_in,
+    OUTPUT = chkpass_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.chkpass OWNER TO postgres;
+
+--
+-- Name: TYPE chkpass; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TYPE chkpass IS 'password type with checks';
+
+
+--
+-- Name: frame; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE frame AS (
+	level integer,
+	targetname text,
+	func oid,
+	linenumber integer,
+	args text
+);
+
+
+ALTER TYPE public.frame OWNER TO postgres;
+
+--
+-- Name: gbtreekey16; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey16;
+
+
+--
+-- Name: gbtreekey16_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey16_in(cstring) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbtreekey_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey16_in(cstring) OWNER TO postgres;
+
+--
+-- Name: gbtreekey16_out(gbtreekey16); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey16_out(gbtreekey16) RETURNS cstring
+    AS '$libdir/btree_gist', 'gbtreekey_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey16_out(gbtreekey16) OWNER TO postgres;
+
+--
+-- Name: gbtreekey16; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey16 (
+    INTERNALLENGTH = 16,
+    INPUT = gbtreekey16_in,
+    OUTPUT = gbtreekey16_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.gbtreekey16 OWNER TO postgres;
+
+--
+-- Name: gbtreekey32; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey32;
+
+
+--
+-- Name: gbtreekey32_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey32_in(cstring) RETURNS gbtreekey32
+    AS '$libdir/btree_gist', 'gbtreekey_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey32_in(cstring) OWNER TO postgres;
+
+--
+-- Name: gbtreekey32_out(gbtreekey32); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey32_out(gbtreekey32) RETURNS cstring
+    AS '$libdir/btree_gist', 'gbtreekey_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey32_out(gbtreekey32) OWNER TO postgres;
+
+--
+-- Name: gbtreekey32; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey32 (
+    INTERNALLENGTH = 32,
+    INPUT = gbtreekey32_in,
+    OUTPUT = gbtreekey32_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.gbtreekey32 OWNER TO postgres;
+
+--
+-- Name: gbtreekey4; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey4;
+
+
+--
+-- Name: gbtreekey4_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey4_in(cstring) RETURNS gbtreekey4
+    AS '$libdir/btree_gist', 'gbtreekey_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey4_in(cstring) OWNER TO postgres;
+
+--
+-- Name: gbtreekey4_out(gbtreekey4); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey4_out(gbtreekey4) RETURNS cstring
+    AS '$libdir/btree_gist', 'gbtreekey_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey4_out(gbtreekey4) OWNER TO postgres;
+
+--
+-- Name: gbtreekey4; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey4 (
+    INTERNALLENGTH = 4,
+    INPUT = gbtreekey4_in,
+    OUTPUT = gbtreekey4_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.gbtreekey4 OWNER TO postgres;
+
+--
+-- Name: gbtreekey8; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey8;
+
+
+--
+-- Name: gbtreekey8_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey8_in(cstring) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbtreekey_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey8_in(cstring) OWNER TO postgres;
+
+--
+-- Name: gbtreekey8_out(gbtreekey8); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey8_out(gbtreekey8) RETURNS cstring
+    AS '$libdir/btree_gist', 'gbtreekey_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey8_out(gbtreekey8) OWNER TO postgres;
+
+--
+-- Name: gbtreekey8; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey8 (
+    INTERNALLENGTH = 8,
+    INPUT = gbtreekey8_in,
+    OUTPUT = gbtreekey8_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.gbtreekey8 OWNER TO postgres;
+
+--
+-- Name: gbtreekey_var; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey_var;
+
+
+--
+-- Name: gbtreekey_var_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey_var_in(cstring) RETURNS gbtreekey_var
+    AS '$libdir/btree_gist', 'gbtreekey_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey_var_in(cstring) OWNER TO postgres;
+
+--
+-- Name: gbtreekey_var_out(gbtreekey_var); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbtreekey_var_out(gbtreekey_var) RETURNS cstring
+    AS '$libdir/btree_gist', 'gbtreekey_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbtreekey_var_out(gbtreekey_var) OWNER TO postgres;
+
+--
+-- Name: gbtreekey_var; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE gbtreekey_var (
+    INTERNALLENGTH = variable,
+    INPUT = gbtreekey_var_in,
+    OUTPUT = gbtreekey_var_out,
+    ALIGNMENT = int4,
+    STORAGE = extended
+);
+
+
+ALTER TYPE public.gbtreekey_var OWNER TO postgres;
+
+--
+-- Name: intbig_gkey; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE intbig_gkey;
+
+
+--
+-- Name: _intbig_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _intbig_in(cstring) RETURNS intbig_gkey
+    AS '$libdir/_int', '_intbig_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._intbig_in(cstring) OWNER TO postgres;
+
+--
+-- Name: _intbig_out(intbig_gkey); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _intbig_out(intbig_gkey) RETURNS cstring
+    AS '$libdir/_int', '_intbig_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._intbig_out(intbig_gkey) OWNER TO postgres;
+
+--
+-- Name: intbig_gkey; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE intbig_gkey (
+    INTERNALLENGTH = variable,
+    INPUT = _intbig_in,
+    OUTPUT = _intbig_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.intbig_gkey OWNER TO postgres;
+
+--
+-- Name: proxyinfo; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE proxyinfo AS (
+	serverversionstr text,
+	serverversionnum integer,
+	proxyapiver integer,
+	serverprocessid integer
+);
+
+
+ALTER TYPE public.proxyinfo OWNER TO postgres;
+
+--
+-- Name: query_int; Type: SHELL TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE query_int;
+
+
+--
+-- Name: bqarr_in(cstring); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION bqarr_in(cstring) RETURNS query_int
+    AS '$libdir/_int', 'bqarr_in'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.bqarr_in(cstring) OWNER TO postgres;
+
+--
+-- Name: bqarr_out(query_int); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION bqarr_out(query_int) RETURNS cstring
+    AS '$libdir/_int', 'bqarr_out'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.bqarr_out(query_int) OWNER TO postgres;
+
+--
+-- Name: query_int; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE query_int (
+    INTERNALLENGTH = variable,
+    INPUT = bqarr_in,
+    OUTPUT = bqarr_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+ALTER TYPE public.query_int OWNER TO postgres;
+
+--
+-- Name: targetinfo; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE targetinfo AS (
+	target oid,
+	schema oid,
+	nargs integer,
+	argtypes oidvector,
+	targetname name,
+	argmodes "char"[],
+	argnames text[],
+	targetlang oid,
+	fqname text,
+	returnsset boolean,
+	returntype oid
+);
+
+
+ALTER TYPE public.targetinfo OWNER TO postgres;
+
+--
+-- Name: var; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE var AS (
+	name text,
+	varclass character(1),
+	linenumber integer,
+	isunique boolean,
+	isconst boolean,
+	isnotnull boolean,
+	dtype oid,
+	value text
+);
+
+
+ALTER TYPE public.var OWNER TO postgres;
+
+--
+-- Name: _int_contained(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_contained(integer[], integer[]) RETURNS boolean
+    AS '$libdir/_int', '_int_contained'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_contained(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION _int_contained(integer[], integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION _int_contained(integer[], integer[]) IS 'contained in';
+
+
+--
+-- Name: _int_contains(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_contains(integer[], integer[]) RETURNS boolean
+    AS '$libdir/_int', '_int_contains'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_contains(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION _int_contains(integer[], integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION _int_contains(integer[], integer[]) IS 'contains';
+
+
+--
+-- Name: _int_different(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_different(integer[], integer[]) RETURNS boolean
+    AS '$libdir/_int', '_int_different'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_different(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION _int_different(integer[], integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION _int_different(integer[], integer[]) IS 'different';
+
+
+--
+-- Name: _int_inter(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_inter(integer[], integer[]) RETURNS integer[]
+    AS '$libdir/_int', '_int_inter'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_inter(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: _int_overlap(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_overlap(integer[], integer[]) RETURNS boolean
+    AS '$libdir/_int', '_int_overlap'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_overlap(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION _int_overlap(integer[], integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION _int_overlap(integer[], integer[]) IS 'overlaps';
+
+
+--
+-- Name: _int_same(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_same(integer[], integer[]) RETURNS boolean
+    AS '$libdir/_int', '_int_same'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_same(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION _int_same(integer[], integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION _int_same(integer[], integer[]) IS 'same as';
+
+
+--
+-- Name: _int_union(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION _int_union(integer[], integer[]) RETURNS integer[]
+    AS '$libdir/_int', '_int_union'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public._int_union(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: autoinc(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION autoinc() RETURNS trigger
+    AS '$libdir/autoinc', 'autoinc'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.autoinc() OWNER TO postgres;
+
+--
+-- Name: boolop(integer[], query_int); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION boolop(integer[], query_int) RETURNS boolean
+    AS '$libdir/_int', 'boolop'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.boolop(integer[], query_int) OWNER TO postgres;
+
+--
+-- Name: FUNCTION boolop(integer[], query_int); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION boolop(integer[], query_int) IS 'boolean operation with array';
+
+
+--
+-- Name: eq(chkpass, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION eq(chkpass, text) RETURNS boolean
+    AS '$libdir/chkpass', 'chkpass_eq'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.eq(chkpass, text) OWNER TO postgres;
+
+--
+-- Name: g_int_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_compress(internal) RETURNS internal
+    AS '$libdir/_int', 'g_int_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_compress(internal) OWNER TO postgres;
+
+--
+-- Name: g_int_consistent(internal, integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_consistent(internal, integer[], integer) RETURNS boolean
+    AS '$libdir/_int', 'g_int_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_consistent(internal, integer[], integer) OWNER TO postgres;
+
+--
+-- Name: g_int_decompress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_decompress(internal) RETURNS internal
+    AS '$libdir/_int', 'g_int_decompress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_decompress(internal) OWNER TO postgres;
+
+--
+-- Name: g_int_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/_int', 'g_int_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.g_int_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_int_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/_int', 'g_int_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_int_same(integer[], integer[], internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_same(integer[], integer[], internal) RETURNS internal
+    AS '$libdir/_int', 'g_int_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_same(integer[], integer[], internal) OWNER TO postgres;
+
+--
+-- Name: g_int_union(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_int_union(internal, internal) RETURNS integer[]
+    AS '$libdir/_int', 'g_int_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_int_union(internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_compress(internal) RETURNS internal
+    AS '$libdir/_int', 'g_intbig_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_compress(internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_consistent(internal, internal, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_consistent(internal, internal, integer) RETURNS boolean
+    AS '$libdir/_int', 'g_intbig_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_consistent(internal, internal, integer) OWNER TO postgres;
+
+--
+-- Name: g_intbig_decompress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_decompress(internal) RETURNS internal
+    AS '$libdir/_int', 'g_intbig_decompress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_decompress(internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/_int', 'g_intbig_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.g_intbig_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/_int', 'g_intbig_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/_int', 'g_intbig_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: g_intbig_union(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION g_intbig_union(internal, internal) RETURNS integer[]
+    AS '$libdir/_int', 'g_intbig_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.g_intbig_union(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bit_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bit_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_consistent(internal, bit, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_consistent(internal, bit, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_bit_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bit_consistent(internal, bit, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bit_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_bit_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bit_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bit_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bit_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bit_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bit_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bit_union(bytea, internal) RETURNS gbtreekey_var
+    AS '$libdir/btree_gist', 'gbt_bit_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bit_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bpchar_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bpchar_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bpchar_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bpchar_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bpchar_consistent(internal, character, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bpchar_consistent(internal, character, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_bpchar_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bpchar_consistent(internal, character, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bytea_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bytea_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_consistent(internal, bytea, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_consistent(internal, bytea, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_bytea_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bytea_consistent(internal, bytea, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bytea_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_bytea_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bytea_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bytea_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_bytea_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bytea_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_bytea_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_bytea_union(bytea, internal) RETURNS gbtreekey_var
+    AS '$libdir/btree_gist', 'gbt_bytea_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_bytea_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_cash_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_cash_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_consistent(internal, money, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_consistent(internal, money, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_cash_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_cash_consistent(internal, money, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_cash_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_cash_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_cash_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_cash_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_cash_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_cash_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_cash_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_cash_union(bytea, internal) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbt_cash_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_cash_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_date_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_date_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_date_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_date_consistent(internal, date, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_consistent(internal, date, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_date_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_date_consistent(internal, date, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_date_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_date_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_date_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_date_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_date_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_date_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_date_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_date_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_date_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_date_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_date_union(bytea, internal) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbt_date_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_date_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_decompress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_decompress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_decompress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_decompress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float4_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float4_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_consistent(internal, real, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_consistent(internal, real, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_float4_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float4_consistent(internal, real, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float4_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_float4_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float4_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float4_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float4_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float4_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float4_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float4_union(bytea, internal) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbt_float4_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float4_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float8_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float8_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_consistent(internal, double precision, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_consistent(internal, double precision, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_float8_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float8_consistent(internal, double precision, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float8_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_float8_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float8_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float8_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_float8_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float8_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_float8_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_float8_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_float8_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_float8_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_inet_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_inet_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_consistent(internal, inet, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_consistent(internal, inet, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_inet_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_inet_consistent(internal, inet, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_inet_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_inet_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_inet_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_inet_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_inet_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_inet_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_inet_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_inet_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_inet_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_inet_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int2_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int2_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_consistent(internal, smallint, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_consistent(internal, smallint, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_int2_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int2_consistent(internal, smallint, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int2_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_int2_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int2_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int2_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int2_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int2_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int2_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int2_union(bytea, internal) RETURNS gbtreekey4
+    AS '$libdir/btree_gist', 'gbt_int2_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int2_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int4_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int4_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_consistent(internal, integer, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_consistent(internal, integer, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_int4_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int4_consistent(internal, integer, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int4_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_int4_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int4_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int4_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int4_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int4_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int4_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int4_union(bytea, internal) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbt_int4_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int4_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int8_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int8_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_consistent(internal, bigint, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_consistent(internal, bigint, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_int8_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int8_consistent(internal, bigint, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int8_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_int8_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int8_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int8_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_int8_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int8_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_int8_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_int8_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_int8_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_int8_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_intv_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_consistent(internal, interval, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_consistent(internal, interval, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_intv_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_consistent(internal, interval, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_decompress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_decompress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_intv_decompress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_decompress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_intv_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_intv_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_intv_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_intv_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_intv_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_intv_union(bytea, internal) RETURNS gbtreekey32
+    AS '$libdir/btree_gist', 'gbt_intv_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_intv_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_macad_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_macad_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_consistent(internal, macaddr, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_consistent(internal, macaddr, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_macad_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_macad_consistent(internal, macaddr, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_macad_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_macad_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_macad_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_macad_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_macad_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_macad_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_macad_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_macad_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_macad_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_macad_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_numeric_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_numeric_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_consistent(internal, numeric, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_consistent(internal, numeric, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_numeric_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_numeric_consistent(internal, numeric, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_numeric_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_numeric_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_numeric_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_numeric_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_numeric_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_numeric_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_numeric_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_numeric_union(bytea, internal) RETURNS gbtreekey_var
+    AS '$libdir/btree_gist', 'gbt_numeric_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_numeric_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_oid_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_oid_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_consistent(internal, oid, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_consistent(internal, oid, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_oid_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_oid_consistent(internal, oid, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_oid_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_oid_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_oid_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_oid_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_oid_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_oid_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_oid_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_oid_union(bytea, internal) RETURNS gbtreekey8
+    AS '$libdir/btree_gist', 'gbt_oid_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_oid_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_text_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_text_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_text_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_text_consistent(internal, text, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_consistent(internal, text, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_text_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_text_consistent(internal, text, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_text_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_text_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_text_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_text_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_text_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_text_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_text_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_text_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_text_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_text_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_text_union(bytea, internal) RETURNS gbtreekey_var
+    AS '$libdir/btree_gist', 'gbt_text_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_text_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_time_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_time_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_time_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_time_consistent(internal, time without time zone, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_consistent(internal, time without time zone, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_time_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_time_consistent(internal, time without time zone, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_time_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_time_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_time_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_time_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_time_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_time_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_time_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_time_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_time_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_time_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_time_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_time_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_time_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_timetz_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_timetz_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_timetz_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_timetz_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_timetz_consistent(internal, time with time zone, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_timetz_consistent(internal, time with time zone, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_timetz_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_timetz_consistent(internal, time with time zone, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_ts_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_ts_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_consistent(internal, timestamp without time zone, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_consistent(internal, timestamp without time zone, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_ts_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_ts_consistent(internal, timestamp without time zone, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_penalty(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_ts_penalty'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.gbt_ts_penalty(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_picksplit(internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_ts_picksplit'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_ts_picksplit(internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_same(internal, internal, internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_ts_same'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_ts_same(internal, internal, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_ts_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_ts_union(bytea, internal) RETURNS gbtreekey16
+    AS '$libdir/btree_gist', 'gbt_ts_union'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_ts_union(bytea, internal) OWNER TO postgres;
+
+--
+-- Name: gbt_tstz_compress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_tstz_compress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_tstz_compress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_tstz_compress(internal) OWNER TO postgres;
+
+--
+-- Name: gbt_tstz_consistent(internal, timestamp with time zone, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_tstz_consistent(internal, timestamp with time zone, smallint) RETURNS boolean
+    AS '$libdir/btree_gist', 'gbt_tstz_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_tstz_consistent(internal, timestamp with time zone, smallint) OWNER TO postgres;
+
+--
+-- Name: gbt_var_decompress(internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION gbt_var_decompress(internal) RETURNS internal
+    AS '$libdir/btree_gist', 'gbt_var_decompress'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.gbt_var_decompress(internal) OWNER TO postgres;
+
+--
+-- Name: get_timetravel(name); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION get_timetravel(name) RETURNS integer
+    AS '$libdir/timetravel', 'get_timetravel'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.get_timetravel(name) OWNER TO postgres;
+
+--
+-- Name: ginint4_consistent(internal, smallint, internal); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ginint4_consistent(internal, smallint, internal) RETURNS internal
+    AS '$libdir/_int', 'ginint4_consistent'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.ginint4_consistent(internal, smallint, internal) OWNER TO postgres;
+
+--
+-- Name: ginint4_queryextract(internal, internal, smallint); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ginint4_queryextract(internal, internal, smallint) RETURNS internal
+    AS '$libdir/_int', 'ginint4_queryextract'
+    LANGUAGE c IMMUTABLE;
+
+
+ALTER FUNCTION public.ginint4_queryextract(internal, internal, smallint) OWNER TO postgres;
+
+--
+-- Name: icount(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION icount(integer[]) RETURNS integer
+    AS '$libdir/_int', 'icount'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.icount(integer[]) OWNER TO postgres;
+
+--
+-- Name: idx(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION idx(integer[], integer) RETURNS integer
+    AS '$libdir/_int', 'idx'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.idx(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: insert_username(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION insert_username() RETURNS trigger
+    AS '$libdir/insert_username', 'insert_username'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.insert_username() OWNER TO postgres;
+
+--
+-- Name: int_agg_final_array(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION int_agg_final_array(integer[]) RETURNS integer[]
+    AS '$libdir/int_aggregate', 'int_agg_final_array'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.int_agg_final_array(integer[]) OWNER TO postgres;
+
+--
+-- Name: int_agg_state(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION int_agg_state(integer[], integer) RETURNS integer[]
+    AS '$libdir/int_aggregate', 'int_agg_state'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.int_agg_state(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: int_array_enum(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION int_array_enum(integer[]) RETURNS SETOF integer
+    AS '$libdir/int_aggregate', 'int_enum'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.int_array_enum(integer[]) OWNER TO postgres;
+
+--
+-- Name: intarray_del_elem(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intarray_del_elem(integer[], integer) RETURNS integer[]
+    AS '$libdir/_int', 'intarray_del_elem'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intarray_del_elem(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: intarray_push_array(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intarray_push_array(integer[], integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'intarray_push_array'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intarray_push_array(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: intarray_push_elem(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intarray_push_elem(integer[], integer) RETURNS integer[]
+    AS '$libdir/_int', 'intarray_push_elem'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intarray_push_elem(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: intset(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intset(integer) RETURNS integer[]
+    AS '$libdir/_int', 'intset'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intset(integer) OWNER TO postgres;
+
+--
+-- Name: intset_subtract(integer[], integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intset_subtract(integer[], integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'intset_subtract'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intset_subtract(integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: intset_union_elem(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION intset_union_elem(integer[], integer) RETURNS integer[]
+    AS '$libdir/_int', 'intset_union_elem'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.intset_union_elem(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: moddatetime(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION moddatetime() RETURNS trigger
+    AS '$libdir/moddatetime', 'moddatetime'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.moddatetime() OWNER TO postgres;
+
+--
+-- Name: ne(chkpass, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ne(chkpass, text) RETURNS boolean
+    AS '$libdir/chkpass', 'chkpass_ne'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.ne(chkpass, text) OWNER TO postgres;
+
+--
+-- Name: pldbg_abort_target(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_abort_target(session integer) RETURNS SETOF boolean
+    AS '$libdir/pldbgapi', 'pldbg_abort_target'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_abort_target(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_attach_to_port(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_attach_to_port(portnumber integer) RETURNS integer
+    AS '$libdir/pldbgapi', 'pldbg_attach_to_port'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_attach_to_port(portnumber integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_continue(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_continue(session integer) RETURNS breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_continue'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_continue(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_create_listener(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_create_listener() RETURNS integer
+    AS '$libdir/pldbgapi', 'pldbg_create_listener'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_create_listener() OWNER TO postgres;
+
+--
+-- Name: pldbg_deposit_value(integer, text, integer, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_deposit_value(session integer, varname text, linenumber integer, value text) RETURNS boolean
+    AS '$libdir/pldbgapi', 'pldbg_deposit_value'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_deposit_value(session integer, varname text, linenumber integer, value text) OWNER TO postgres;
+
+--
+-- Name: pldbg_drop_breakpoint(integer, oid, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_drop_breakpoint(session integer, func oid, linenumber integer) RETURNS boolean
+    AS '$libdir/pldbgapi', 'pldbg_drop_breakpoint'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_drop_breakpoint(session integer, func oid, linenumber integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_get_breakpoints(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_breakpoints(session integer) RETURNS SETOF breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_get_breakpoints'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_breakpoints(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_get_proxy_info(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_proxy_info() RETURNS proxyinfo
+    AS '$libdir/pldbgapi', 'pldbg_get_proxy_info'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_proxy_info() OWNER TO postgres;
+
+--
+-- Name: pldbg_get_source(integer, oid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_source(session integer, func oid) RETURNS text
+    AS '$libdir/pldbgapi', 'pldbg_get_source'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_source(session integer, func oid) OWNER TO postgres;
+
+--
+-- Name: pldbg_get_stack(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_stack(session integer) RETURNS SETOF frame
+    AS '$libdir/pldbgapi', 'pldbg_get_stack'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_stack(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_get_target_info(text, "char"); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_target_info(signature text, targettype "char") RETURNS targetinfo
+    AS '$libdir/targetinfo', 'pldbg_get_target_info'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_target_info(signature text, targettype "char") OWNER TO postgres;
+
+--
+-- Name: pldbg_get_variables(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_get_variables(session integer) RETURNS SETOF var
+    AS '$libdir/pldbgapi', 'pldbg_get_variables'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_get_variables(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_select_frame(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_select_frame(session integer, frame integer) RETURNS breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_select_frame'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_select_frame(session integer, frame integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_set_breakpoint(integer, oid, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_set_breakpoint(session integer, func oid, linenumber integer) RETURNS boolean
+    AS '$libdir/pldbgapi', 'pldbg_set_breakpoint'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_set_breakpoint(session integer, func oid, linenumber integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_set_global_breakpoint(integer, oid, integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_set_global_breakpoint(session integer, func oid, linenumber integer, targetpid integer) RETURNS boolean
+    AS '$libdir/pldbgapi', 'pldbg_set_global_breakpoint'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.pldbg_set_global_breakpoint(session integer, func oid, linenumber integer, targetpid integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_step_into(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_step_into(session integer) RETURNS breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_step_into'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_step_into(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_step_over(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_step_over(session integer) RETURNS breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_step_over'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_step_over(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_wait_for_breakpoint(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_wait_for_breakpoint(session integer) RETURNS breakpoint
+    AS '$libdir/pldbgapi', 'pldbg_wait_for_breakpoint'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_wait_for_breakpoint(session integer) OWNER TO postgres;
+
+--
+-- Name: pldbg_wait_for_target(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION pldbg_wait_for_target(session integer) RETURNS integer
+    AS '$libdir/pldbgapi', 'pldbg_wait_for_target'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.pldbg_wait_for_target(session integer) OWNER TO postgres;
+
+--
+-- Name: plpgsql_oid_debug(oid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION plpgsql_oid_debug(functionoid oid) RETURNS integer
+    AS '$libdir/plugins/plugin_debugger', 'plpgsql_oid_debug'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.plpgsql_oid_debug(functionoid oid) OWNER TO postgres;
+
+--
+-- Name: querytree(query_int); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION querytree(query_int) RETURNS text
+    AS '$libdir/_int', 'querytree'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.querytree(query_int) OWNER TO postgres;
+
+--
+-- Name: raw(chkpass); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION raw(chkpass) RETURNS text
+    AS '$libdir/chkpass', 'chkpass_rout'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.raw(chkpass) OWNER TO postgres;
+
+--
+-- Name: rboolop(query_int, integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION rboolop(query_int, integer[]) RETURNS boolean
+    AS '$libdir/_int', 'rboolop'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.rboolop(query_int, integer[]) OWNER TO postgres;
+
+--
+-- Name: FUNCTION rboolop(query_int, integer[]); Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON FUNCTION rboolop(query_int, integer[]) IS 'boolean operation with array';
+
+
+--
+-- Name: set_timetravel(name, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION set_timetravel(name, integer) RETURNS integer
+    AS '$libdir/timetravel', 'set_timetravel'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.set_timetravel(name, integer) OWNER TO postgres;
+
+--
+-- Name: sort(integer[], text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION sort(integer[], text) RETURNS integer[]
+    AS '$libdir/_int', 'sort'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.sort(integer[], text) OWNER TO postgres;
+
+--
+-- Name: sort(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION sort(integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'sort'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.sort(integer[]) OWNER TO postgres;
+
+--
+-- Name: sort_asc(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION sort_asc(integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'sort_asc'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.sort_asc(integer[]) OWNER TO postgres;
+
+--
+-- Name: sort_desc(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION sort_desc(integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'sort_desc'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.sort_desc(integer[]) OWNER TO postgres;
+
+--
+-- Name: subarray(integer[], integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION subarray(integer[], integer, integer) RETURNS integer[]
+    AS '$libdir/_int', 'subarray'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.subarray(integer[], integer, integer) OWNER TO postgres;
+
+--
+-- Name: subarray(integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION subarray(integer[], integer) RETURNS integer[]
+    AS '$libdir/_int', 'subarray'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.subarray(integer[], integer) OWNER TO postgres;
+
+--
+-- Name: timetravel(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION timetravel() RETURNS trigger
+    AS '$libdir/timetravel', 'timetravel'
+    LANGUAGE c;
+
+
+ALTER FUNCTION public.timetravel() OWNER TO postgres;
+
+--
+-- Name: uniq(integer[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION uniq(integer[]) RETURNS integer[]
+    AS '$libdir/_int', 'uniq'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.uniq(integer[]) OWNER TO postgres;
+
+--
+-- Name: xml_encode_special_chars(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xml_encode_special_chars(text) RETURNS text
+    AS '$libdir/pgxml', 'xml_encode_special_chars'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xml_encode_special_chars(text) OWNER TO postgres;
+
+--
+-- Name: xml_is_well_formed(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xml_is_well_formed(text) RETURNS boolean
+    AS '$libdir/pgxml', 'xml_is_well_formed'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xml_is_well_formed(text) OWNER TO postgres;
+
+--
+-- Name: xml_valid(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xml_valid(text) RETURNS boolean
+    AS '$libdir/pgxml', 'xml_is_well_formed'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xml_valid(text) OWNER TO postgres;
+
+--
+-- Name: xpath_bool(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_bool(text, text) RETURNS boolean
+    AS '$libdir/pgxml', 'xpath_bool'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_bool(text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_list(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_list(text, text, text) RETURNS text
+    AS '$libdir/pgxml', 'xpath_list'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_list(text, text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_list(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_list(text, text) RETURNS text
+    AS $_$SELECT xpath_list($1,$2,',')$_$
+    LANGUAGE sql IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_list(text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_nodeset(text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_nodeset(text, text, text, text) RETURNS text
+    AS '$libdir/pgxml', 'xpath_nodeset'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_nodeset(text, text, text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_nodeset(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_nodeset(text, text) RETURNS text
+    AS $_$SELECT xpath_nodeset($1,$2,'','')$_$
+    LANGUAGE sql IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_nodeset(text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_nodeset(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_nodeset(text, text, text) RETURNS text
+    AS $_$SELECT xpath_nodeset($1,$2,'',$3)$_$
+    LANGUAGE sql IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_nodeset(text, text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_number(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_number(text, text) RETURNS real
+    AS '$libdir/pgxml', 'xpath_number'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_number(text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_string(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_string(text, text) RETURNS text
+    AS '$libdir/pgxml', 'xpath_string'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_string(text, text) OWNER TO postgres;
+
+--
+-- Name: xpath_table(text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xpath_table(text, text, text, text, text) RETURNS SETOF record
+    AS '$libdir/pgxml', 'xpath_table'
+    LANGUAGE c STABLE STRICT;
+
+
+ALTER FUNCTION public.xpath_table(text, text, text, text, text) OWNER TO postgres;
+
+--
+-- Name: xslt_process(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xslt_process(text, text, text) RETURNS text
+    AS '$libdir/pgxml', 'xslt_process'
+    LANGUAGE c STRICT;
+
+
+ALTER FUNCTION public.xslt_process(text, text, text) OWNER TO postgres;
+
+--
+-- Name: xslt_process(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION xslt_process(text, text) RETURNS text
+    AS '$libdir/pgxml', 'xslt_process'
+    LANGUAGE c IMMUTABLE STRICT;
+
+
+ALTER FUNCTION public.xslt_process(text, text) OWNER TO postgres;
+
+--
+-- Name: int_array_aggregate(integer); Type: AGGREGATE; Schema: public; Owner: postgres
+--
+
+CREATE AGGREGATE int_array_aggregate(integer) (
+    SFUNC = int_agg_state,
+    STYPE = integer[],
+    FINALFUNC = int_agg_final_array
+);
+
+
+ALTER AGGREGATE public.int_array_aggregate(integer) OWNER TO postgres;
+
+--
+-- Name: #; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR # (
+    PROCEDURE = icount,
+    RIGHTARG = integer[]
+);
+
+
+ALTER OPERATOR public.# (NONE, integer[]) OWNER TO postgres;
+
+--
+-- Name: #; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR # (
+    PROCEDURE = idx,
+    LEFTARG = integer[],
+    RIGHTARG = integer
+);
+
+
+ALTER OPERATOR public.# (integer[], integer) OWNER TO postgres;
+
+--
+-- Name: &; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR & (
+    PROCEDURE = _int_inter,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = &
+);
+
+
+ALTER OPERATOR public.& (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: &&; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR && (
+    PROCEDURE = _int_overlap,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = &&,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.&& (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: +; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR + (
+    PROCEDURE = intarray_push_elem,
+    LEFTARG = integer[],
+    RIGHTARG = integer
+);
+
+
+ALTER OPERATOR public.+ (integer[], integer) OWNER TO postgres;
+
+--
+-- Name: +; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR + (
+    PROCEDURE = intarray_push_array,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = +
+);
+
+
+ALTER OPERATOR public.+ (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: -; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR - (
+    PROCEDURE = intarray_del_elem,
+    LEFTARG = integer[],
+    RIGHTARG = integer
+);
+
+
+ALTER OPERATOR public.- (integer[], integer) OWNER TO postgres;
+
+--
+-- Name: -; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR - (
+    PROCEDURE = intset_subtract,
+    LEFTARG = integer[],
+    RIGHTARG = integer[]
+);
+
+
+ALTER OPERATOR public.- (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: <>; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR <> (
+    PROCEDURE = ne,
+    LEFTARG = chkpass,
+    RIGHTARG = text,
+    NEGATOR = =
+);
+
+
+ALTER OPERATOR public.<> (chkpass, text) OWNER TO postgres;
+
+--
+-- Name: <@; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR <@ (
+    PROCEDURE = _int_contained,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = @>,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.<@ (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: =; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR = (
+    PROCEDURE = eq,
+    LEFTARG = chkpass,
+    RIGHTARG = text,
+    NEGATOR = <>
+);
+
+
+ALTER OPERATOR public.= (chkpass, text) OWNER TO postgres;
+
+--
+-- Name: @; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR @ (
+    PROCEDURE = _int_contains,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = ~,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.@ (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: @>; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR @> (
+    PROCEDURE = _int_contains,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = <@,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.@> (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: @@; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR @@ (
+    PROCEDURE = boolop,
+    LEFTARG = integer[],
+    RIGHTARG = query_int,
+    COMMUTATOR = ~~,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.@@ (integer[], query_int) OWNER TO postgres;
+
+--
+-- Name: |; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR | (
+    PROCEDURE = intset_union_elem,
+    LEFTARG = integer[],
+    RIGHTARG = integer
+);
+
+
+ALTER OPERATOR public.| (integer[], integer) OWNER TO postgres;
+
+--
+-- Name: |; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR | (
+    PROCEDURE = _int_union,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = |
+);
+
+
+ALTER OPERATOR public.| (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: ~; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR ~ (
+    PROCEDURE = _int_contained,
+    LEFTARG = integer[],
+    RIGHTARG = integer[],
+    COMMUTATOR = @,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.~ (integer[], integer[]) OWNER TO postgres;
+
+--
+-- Name: ~~; Type: OPERATOR; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR ~~ (
+    PROCEDURE = rboolop,
+    LEFTARG = query_int,
+    RIGHTARG = integer[],
+    COMMUTATOR = @@,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+ALTER OPERATOR public.~~ (query_int, integer[]) OWNER TO postgres;
+
+--
+-- Name: gin__int_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gin__int_ops
+    FOR TYPE integer[] USING gin AS
+    STORAGE integer ,
+    OPERATOR 3 &&(integer[],integer[]) ,
+    OPERATOR 6 =(anyarray,anyarray) RECHECK ,
+    OPERATOR 7 @>(integer[],integer[]) ,
+    OPERATOR 8 <@(integer[],integer[]) RECHECK ,
+    OPERATOR 13 @(integer[],integer[]) ,
+    OPERATOR 14 ~(integer[],integer[]) RECHECK ,
+    OPERATOR 20 @@(integer[],query_int) ,
+    FUNCTION 1 btint4cmp(integer,integer) ,
+    FUNCTION 2 ginarrayextract(anyarray,internal) ,
+    FUNCTION 3 ginint4_queryextract(internal,internal,smallint) ,
+    FUNCTION 4 ginint4_consistent(internal,smallint,internal);
+
+
+ALTER OPERATOR CLASS public.gin__int_ops USING gin OWNER TO postgres;
+
+--
+-- Name: gist__int_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist__int_ops
+    DEFAULT FOR TYPE integer[] USING gist AS
+    OPERATOR 3 &&(integer[],integer[]) ,
+    OPERATOR 6 =(anyarray,anyarray) RECHECK ,
+    OPERATOR 7 @>(integer[],integer[]) ,
+    OPERATOR 8 <@(integer[],integer[]) ,
+    OPERATOR 13 @(integer[],integer[]) ,
+    OPERATOR 14 ~(integer[],integer[]) ,
+    OPERATOR 20 @@(integer[],query_int) ,
+    FUNCTION 1 g_int_consistent(internal,integer[],integer) ,
+    FUNCTION 2 g_int_union(internal,internal) ,
+    FUNCTION 3 g_int_compress(internal) ,
+    FUNCTION 4 g_int_decompress(internal) ,
+    FUNCTION 5 g_int_penalty(internal,internal,internal) ,
+    FUNCTION 6 g_int_picksplit(internal,internal) ,
+    FUNCTION 7 g_int_same(integer[],integer[],internal);
+
+
+ALTER OPERATOR CLASS public.gist__int_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist__intbig_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist__intbig_ops
+    FOR TYPE integer[] USING gist AS
+    STORAGE intbig_gkey ,
+    OPERATOR 3 &&(integer[],integer[]) RECHECK ,
+    OPERATOR 6 =(anyarray,anyarray) RECHECK ,
+    OPERATOR 7 @>(integer[],integer[]) RECHECK ,
+    OPERATOR 8 <@(integer[],integer[]) RECHECK ,
+    OPERATOR 13 @(integer[],integer[]) RECHECK ,
+    OPERATOR 14 ~(integer[],integer[]) RECHECK ,
+    OPERATOR 20 @@(integer[],query_int) RECHECK ,
+    FUNCTION 1 g_intbig_consistent(internal,internal,integer) ,
+    FUNCTION 2 g_intbig_union(internal,internal) ,
+    FUNCTION 3 g_intbig_compress(internal) ,
+    FUNCTION 4 g_intbig_decompress(internal) ,
+    FUNCTION 5 g_intbig_penalty(internal,internal,internal) ,
+    FUNCTION 6 g_intbig_picksplit(internal,internal) ,
+    FUNCTION 7 g_intbig_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist__intbig_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_bit_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_bit_ops
+    DEFAULT FOR TYPE bit USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(bit,bit) ,
+    OPERATOR 2 <=(bit,bit) ,
+    OPERATOR 3 =(bit,bit) ,
+    OPERATOR 4 >=(bit,bit) ,
+    OPERATOR 5 >(bit,bit) ,
+    FUNCTION 1 gbt_bit_consistent(internal,bit,smallint) ,
+    FUNCTION 2 gbt_bit_union(bytea,internal) ,
+    FUNCTION 3 gbt_bit_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_bit_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_bit_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_bit_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_bit_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_bpchar_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_bpchar_ops
+    DEFAULT FOR TYPE character USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(character,character) ,
+    OPERATOR 2 <=(character,character) ,
+    OPERATOR 3 =(character,character) ,
+    OPERATOR 4 >=(character,character) ,
+    OPERATOR 5 >(character,character) ,
+    FUNCTION 1 gbt_bpchar_consistent(internal,character,smallint) ,
+    FUNCTION 2 gbt_text_union(bytea,internal) ,
+    FUNCTION 3 gbt_bpchar_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_text_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_text_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_text_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_bpchar_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_bytea_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_bytea_ops
+    DEFAULT FOR TYPE bytea USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(bytea,bytea) ,
+    OPERATOR 2 <=(bytea,bytea) ,
+    OPERATOR 3 =(bytea,bytea) ,
+    OPERATOR 4 >=(bytea,bytea) ,
+    OPERATOR 5 >(bytea,bytea) ,
+    FUNCTION 1 gbt_bytea_consistent(internal,bytea,smallint) ,
+    FUNCTION 2 gbt_bytea_union(bytea,internal) ,
+    FUNCTION 3 gbt_bytea_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_bytea_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_bytea_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_bytea_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_bytea_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_cash_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_cash_ops
+    DEFAULT FOR TYPE money USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(money,money) ,
+    OPERATOR 2 <=(money,money) ,
+    OPERATOR 3 =(money,money) ,
+    OPERATOR 4 >=(money,money) ,
+    OPERATOR 5 >(money,money) ,
+    FUNCTION 1 gbt_cash_consistent(internal,money,smallint) ,
+    FUNCTION 2 gbt_cash_union(bytea,internal) ,
+    FUNCTION 3 gbt_cash_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_cash_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_cash_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_cash_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_cash_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_cidr_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_cidr_ops
+    DEFAULT FOR TYPE cidr USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(inet,inet) RECHECK ,
+    OPERATOR 2 <=(inet,inet) RECHECK ,
+    OPERATOR 3 =(inet,inet) RECHECK ,
+    OPERATOR 4 >=(inet,inet) RECHECK ,
+    OPERATOR 5 >(inet,inet) RECHECK ,
+    FUNCTION 1 gbt_inet_consistent(internal,inet,smallint) ,
+    FUNCTION 2 gbt_inet_union(bytea,internal) ,
+    FUNCTION 3 gbt_inet_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_inet_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_inet_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_inet_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_cidr_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_date_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_date_ops
+    DEFAULT FOR TYPE date USING gist AS
+    STORAGE gbtreekey8 ,
+    OPERATOR 1 <(date,date) ,
+    OPERATOR 2 <=(date,date) ,
+    OPERATOR 3 =(date,date) ,
+    OPERATOR 4 >=(date,date) ,
+    OPERATOR 5 >(date,date) ,
+    FUNCTION 1 gbt_date_consistent(internal,date,smallint) ,
+    FUNCTION 2 gbt_date_union(bytea,internal) ,
+    FUNCTION 3 gbt_date_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_date_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_date_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_date_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_date_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_float4_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_float4_ops
+    DEFAULT FOR TYPE real USING gist AS
+    STORAGE gbtreekey8 ,
+    OPERATOR 1 <(real,real) ,
+    OPERATOR 2 <=(real,real) ,
+    OPERATOR 3 =(real,real) ,
+    OPERATOR 4 >=(real,real) ,
+    OPERATOR 5 >(real,real) ,
+    FUNCTION 1 gbt_float4_consistent(internal,real,smallint) ,
+    FUNCTION 2 gbt_float4_union(bytea,internal) ,
+    FUNCTION 3 gbt_float4_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_float4_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_float4_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_float4_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_float4_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_float8_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_float8_ops
+    DEFAULT FOR TYPE double precision USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(double precision,double precision) ,
+    OPERATOR 2 <=(double precision,double precision) ,
+    OPERATOR 3 =(double precision,double precision) ,
+    OPERATOR 4 >=(double precision,double precision) ,
+    OPERATOR 5 >(double precision,double precision) ,
+    FUNCTION 1 gbt_float8_consistent(internal,double precision,smallint) ,
+    FUNCTION 2 gbt_float8_union(bytea,internal) ,
+    FUNCTION 3 gbt_float8_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_float8_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_float8_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_float8_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_float8_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_inet_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_inet_ops
+    DEFAULT FOR TYPE inet USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(inet,inet) RECHECK ,
+    OPERATOR 2 <=(inet,inet) RECHECK ,
+    OPERATOR 3 =(inet,inet) RECHECK ,
+    OPERATOR 4 >=(inet,inet) RECHECK ,
+    OPERATOR 5 >(inet,inet) RECHECK ,
+    FUNCTION 1 gbt_inet_consistent(internal,inet,smallint) ,
+    FUNCTION 2 gbt_inet_union(bytea,internal) ,
+    FUNCTION 3 gbt_inet_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_inet_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_inet_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_inet_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_inet_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_int2_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_int2_ops
+    DEFAULT FOR TYPE smallint USING gist AS
+    STORAGE gbtreekey4 ,
+    OPERATOR 1 <(smallint,smallint) ,
+    OPERATOR 2 <=(smallint,smallint) ,
+    OPERATOR 3 =(smallint,smallint) ,
+    OPERATOR 4 >=(smallint,smallint) ,
+    OPERATOR 5 >(smallint,smallint) ,
+    FUNCTION 1 gbt_int2_consistent(internal,smallint,smallint) ,
+    FUNCTION 2 gbt_int2_union(bytea,internal) ,
+    FUNCTION 3 gbt_int2_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_int2_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_int2_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_int2_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_int2_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_int4_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_int4_ops
+    DEFAULT FOR TYPE integer USING gist AS
+    STORAGE gbtreekey8 ,
+    OPERATOR 1 <(integer,integer) ,
+    OPERATOR 2 <=(integer,integer) ,
+    OPERATOR 3 =(integer,integer) ,
+    OPERATOR 4 >=(integer,integer) ,
+    OPERATOR 5 >(integer,integer) ,
+    FUNCTION 1 gbt_int4_consistent(internal,integer,smallint) ,
+    FUNCTION 2 gbt_int4_union(bytea,internal) ,
+    FUNCTION 3 gbt_int4_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_int4_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_int4_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_int4_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_int4_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_int8_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_int8_ops
+    DEFAULT FOR TYPE bigint USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(bigint,bigint) ,
+    OPERATOR 2 <=(bigint,bigint) ,
+    OPERATOR 3 =(bigint,bigint) ,
+    OPERATOR 4 >=(bigint,bigint) ,
+    OPERATOR 5 >(bigint,bigint) ,
+    FUNCTION 1 gbt_int8_consistent(internal,bigint,smallint) ,
+    FUNCTION 2 gbt_int8_union(bytea,internal) ,
+    FUNCTION 3 gbt_int8_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_int8_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_int8_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_int8_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_int8_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_interval_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_interval_ops
+    DEFAULT FOR TYPE interval USING gist AS
+    STORAGE gbtreekey32 ,
+    OPERATOR 1 <(interval,interval) ,
+    OPERATOR 2 <=(interval,interval) ,
+    OPERATOR 3 =(interval,interval) ,
+    OPERATOR 4 >=(interval,interval) ,
+    OPERATOR 5 >(interval,interval) ,
+    FUNCTION 1 gbt_intv_consistent(internal,interval,smallint) ,
+    FUNCTION 2 gbt_intv_union(bytea,internal) ,
+    FUNCTION 3 gbt_intv_compress(internal) ,
+    FUNCTION 4 gbt_intv_decompress(internal) ,
+    FUNCTION 5 gbt_intv_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_intv_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_intv_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_interval_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_macaddr_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_macaddr_ops
+    DEFAULT FOR TYPE macaddr USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(macaddr,macaddr) ,
+    OPERATOR 2 <=(macaddr,macaddr) ,
+    OPERATOR 3 =(macaddr,macaddr) ,
+    OPERATOR 4 >=(macaddr,macaddr) ,
+    OPERATOR 5 >(macaddr,macaddr) ,
+    FUNCTION 1 gbt_macad_consistent(internal,macaddr,smallint) ,
+    FUNCTION 2 gbt_macad_union(bytea,internal) ,
+    FUNCTION 3 gbt_macad_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_macad_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_macad_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_macad_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_macaddr_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_numeric_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_numeric_ops
+    DEFAULT FOR TYPE numeric USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(numeric,numeric) ,
+    OPERATOR 2 <=(numeric,numeric) ,
+    OPERATOR 3 =(numeric,numeric) ,
+    OPERATOR 4 >=(numeric,numeric) ,
+    OPERATOR 5 >(numeric,numeric) ,
+    FUNCTION 1 gbt_numeric_consistent(internal,numeric,smallint) ,
+    FUNCTION 2 gbt_numeric_union(bytea,internal) ,
+    FUNCTION 3 gbt_numeric_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_numeric_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_numeric_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_numeric_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_numeric_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_oid_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_oid_ops
+    DEFAULT FOR TYPE oid USING gist AS
+    STORAGE gbtreekey8 ,
+    OPERATOR 1 <(oid,oid) ,
+    OPERATOR 2 <=(oid,oid) ,
+    OPERATOR 3 =(oid,oid) ,
+    OPERATOR 4 >=(oid,oid) ,
+    OPERATOR 5 >(oid,oid) ,
+    FUNCTION 1 gbt_oid_consistent(internal,oid,smallint) ,
+    FUNCTION 2 gbt_oid_union(bytea,internal) ,
+    FUNCTION 3 gbt_oid_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_oid_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_oid_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_oid_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_oid_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_text_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_text_ops
+    DEFAULT FOR TYPE text USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(text,text) ,
+    OPERATOR 2 <=(text,text) ,
+    OPERATOR 3 =(text,text) ,
+    OPERATOR 4 >=(text,text) ,
+    OPERATOR 5 >(text,text) ,
+    FUNCTION 1 gbt_text_consistent(internal,text,smallint) ,
+    FUNCTION 2 gbt_text_union(bytea,internal) ,
+    FUNCTION 3 gbt_text_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_text_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_text_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_text_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_text_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_time_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_time_ops
+    DEFAULT FOR TYPE time without time zone USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(time without time zone,time without time zone) ,
+    OPERATOR 2 <=(time without time zone,time without time zone) ,
+    OPERATOR 3 =(time without time zone,time without time zone) ,
+    OPERATOR 4 >=(time without time zone,time without time zone) ,
+    OPERATOR 5 >(time without time zone,time without time zone) ,
+    FUNCTION 1 gbt_time_consistent(internal,time without time zone,smallint) ,
+    FUNCTION 2 gbt_time_union(bytea,internal) ,
+    FUNCTION 3 gbt_time_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_time_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_time_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_time_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_time_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_timestamp_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_timestamp_ops
+    DEFAULT FOR TYPE timestamp without time zone USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(timestamp without time zone,timestamp without time zone) ,
+    OPERATOR 2 <=(timestamp without time zone,timestamp without time zone) ,
+    OPERATOR 3 =(timestamp without time zone,timestamp without time zone) ,
+    OPERATOR 4 >=(timestamp without time zone,timestamp without time zone) ,
+    OPERATOR 5 >(timestamp without time zone,timestamp without time zone) ,
+    FUNCTION 1 gbt_ts_consistent(internal,timestamp without time zone,smallint) ,
+    FUNCTION 2 gbt_ts_union(bytea,internal) ,
+    FUNCTION 3 gbt_ts_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_ts_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_ts_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_ts_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_timestamp_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_timestamptz_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_timestamptz_ops
+    DEFAULT FOR TYPE timestamp with time zone USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(timestamp with time zone,timestamp with time zone) ,
+    OPERATOR 2 <=(timestamp with time zone,timestamp with time zone) ,
+    OPERATOR 3 =(timestamp with time zone,timestamp with time zone) ,
+    OPERATOR 4 >=(timestamp with time zone,timestamp with time zone) ,
+    OPERATOR 5 >(timestamp with time zone,timestamp with time zone) ,
+    FUNCTION 1 gbt_tstz_consistent(internal,timestamp with time zone,smallint) ,
+    FUNCTION 2 gbt_ts_union(bytea,internal) ,
+    FUNCTION 3 gbt_tstz_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_ts_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_ts_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_ts_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_timestamptz_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_timetz_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_timetz_ops
+    DEFAULT FOR TYPE time with time zone USING gist AS
+    STORAGE gbtreekey16 ,
+    OPERATOR 1 <(time with time zone,time with time zone) RECHECK ,
+    OPERATOR 2 <=(time with time zone,time with time zone) RECHECK ,
+    OPERATOR 3 =(time with time zone,time with time zone) RECHECK ,
+    OPERATOR 4 >=(time with time zone,time with time zone) RECHECK ,
+    OPERATOR 5 >(time with time zone,time with time zone) RECHECK ,
+    FUNCTION 1 gbt_timetz_consistent(internal,time with time zone,smallint) ,
+    FUNCTION 2 gbt_time_union(bytea,internal) ,
+    FUNCTION 3 gbt_timetz_compress(internal) ,
+    FUNCTION 4 gbt_decompress(internal) ,
+    FUNCTION 5 gbt_time_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_time_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_time_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_timetz_ops USING gist OWNER TO postgres;
+
+--
+-- Name: gist_vbit_ops; Type: OPERATOR CLASS; Schema: public; Owner: postgres
+--
+
+CREATE OPERATOR CLASS gist_vbit_ops
+    DEFAULT FOR TYPE bit varying USING gist AS
+    STORAGE gbtreekey_var ,
+    OPERATOR 1 <(bit varying,bit varying) ,
+    OPERATOR 2 <=(bit varying,bit varying) ,
+    OPERATOR 3 =(bit varying,bit varying) ,
+    OPERATOR 4 >=(bit varying,bit varying) ,
+    OPERATOR 5 >(bit varying,bit varying) ,
+    FUNCTION 1 gbt_bit_consistent(internal,bit,smallint) ,
+    FUNCTION 2 gbt_bit_union(bytea,internal) ,
+    FUNCTION 3 gbt_bit_compress(internal) ,
+    FUNCTION 4 gbt_var_decompress(internal) ,
+    FUNCTION 5 gbt_bit_penalty(internal,internal,internal) ,
+    FUNCTION 6 gbt_bit_picksplit(internal,internal) ,
+    FUNCTION 7 gbt_bit_same(internal,internal,internal);
+
+
+ALTER OPERATOR CLASS public.gist_vbit_ops USING gist OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: bono; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE bono (
+    rut character varying(10) NOT NULL,
+    bonos numeric(8,0)
+);
+
+
+ALTER TABLE public.bono OWNER TO postgres;
+
+--
+-- Name: caja_chica; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE caja_chica (
+    fecha date,
+    proveedor character varying(50),
+    concepto character varying(50),
+    dctos character varying(50),
+    gtosgrles integer DEFAULT 0,
+    anticipos integer DEFAULT 0,
+    combust integer DEFAULT 0,
+    reintcomb integer DEFAULT 0,
+    cheques integer DEFAULT 0,
+    otros integer DEFAULT 0,
+    id_caja integer NOT NULL,
+    saldo integer DEFAULT 0,
+    rut_responsable character varying(10) NOT NULL
+);
+
+
+ALTER TABLE public.caja_chica OWNER TO postgres;
+
+--
+-- Name: caja_chica_id_caja_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE caja_chica_id_caja_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.caja_chica_id_caja_seq OWNER TO postgres;
+
+--
+-- Name: caja_chica_id_caja_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE caja_chica_id_caja_seq OWNED BY caja_chica.id_caja;
+
+
+--
+-- Name: caja_chica_id_caja_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('caja_chica_id_caja_seq', 20, true);
+
+
+--
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE cliente (
+    rut_cliente character varying(10) NOT NULL,
+    nombre_cliente character varying(30) NOT NULL,
+    giro_cliente character varying(30),
+    direccion_cliente character varying(50),
+    telefono_cliente character varying(16),
+    telefono2_cliente character varying(16),
+    telefono3_cliente character varying(16),
+    mail_cliente character varying(50),
+    web_cliente character varying(60)
+);
+
+
+ALTER TABLE public.cliente OWNER TO postgres;
+
+--
+-- Name: conductor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE conductor (
+    rut_conductor character varying(10) NOT NULL,
+    v_licencia date,
+    estado_conductor character varying(10),
+    v_examen date
+);
+
+
+ALTER TABLE public.conductor OWNER TO postgres;
+
+--
+-- Name: empresa; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE empresa (
+    rut_empresa character varying(10) NOT NULL,
+    razon_social character varying(30) NOT NULL,
+    direccion character varying(50) NOT NULL,
+    fono character varying(16),
+    giro character varying(30) NOT NULL
+);
+
+
+ALTER TABLE public.empresa OWNER TO postgres;
+
+--
+-- Name: facturas_combustible; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE facturas_combustible (
+    n_factura_compra integer NOT NULL,
+    fecha_factura_compra date NOT NULL,
+    rut_proveedor character varying(10) NOT NULL,
+    neto_factura_compra integer NOT NULL,
+    iva_factura_compra integer NOT NULL,
+    impuesto_esp integer NOT NULL,
+    total_factura_compra integer NOT NULL,
+    descripcion_factura_compra character varying(60),
+    ngd_factura_compra integer,
+    noc_factura_compra integer,
+    cdv_factura_compra character varying(20),
+    entregado_factura_compra character varying(1),
+    pagado_factura_compra character varying(1),
+    cod_factura_comb integer NOT NULL
+);
+
+
+ALTER TABLE public.facturas_combustible OWNER TO postgres;
+
+--
+-- Name: facturas_combustible_cod_factura_comb_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE facturas_combustible_cod_factura_comb_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.facturas_combustible_cod_factura_comb_seq OWNER TO postgres;
+
+--
+-- Name: facturas_combustible_cod_factura_comb_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE facturas_combustible_cod_factura_comb_seq OWNED BY facturas_combustible.cod_factura_comb;
+
+
+--
+-- Name: facturas_combustible_cod_factura_comb_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('facturas_combustible_cod_factura_comb_seq', 2, true);
+
+
+--
+-- Name: facturas_compra; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE facturas_compra (
+    n_factura_compra integer NOT NULL,
+    fecha_factura_compra date NOT NULL,
+    rut_proveedor character varying(10) NOT NULL,
+    neto_factura_compra integer NOT NULL,
+    iva_factura_compra integer NOT NULL,
+    total_factura_compra integer NOT NULL,
+    descripcion_factura_compra character varying(60),
+    ngd_factura_compra integer,
+    noc_factura_compra integer,
+    cdv_factura_compra character varying(20),
+    entregado_factura_compra character varying(1),
+    pagado_factura_compra character varying(1),
+    tipo_factura character varying(1) NOT NULL,
+    cod_factura_compra integer NOT NULL,
+    rut_empresa character varying(10) NOT NULL,
+    rut_responsable character varying(10) NOT NULL,
+    contabilizado character(1) NOT NULL
+);
+
+
+ALTER TABLE public.facturas_compra OWNER TO postgres;
+
+--
+-- Name: facturas_compra_cod_factura_compra_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE facturas_compra_cod_factura_compra_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.facturas_compra_cod_factura_compra_seq OWNER TO postgres;
+
+--
+-- Name: facturas_compra_cod_factura_compra_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE facturas_compra_cod_factura_compra_seq OWNED BY facturas_compra.cod_factura_compra;
+
+
+--
+-- Name: facturas_compra_cod_factura_compra_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('facturas_compra_cod_factura_compra_seq', 27, true);
+
+
+--
+-- Name: facturas_emitidas; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE facturas_emitidas (
+    cod_factura_emitida bigint NOT NULL,
+    n_factura_emitida integer NOT NULL,
+    fecha_factura_emitida date NOT NULL,
+    rut_cliente character varying(10) NOT NULL,
+    neto_factura_emitida integer NOT NULL,
+    iva_factura_emitida integer NOT NULL,
+    total_factura_emitida integer NOT NULL,
+    descripcion_factura_emitida character varying(60),
+    ngd_factura_emitida integer,
+    noc_factura_emitida integer,
+    cdv_factura_emitida character varying(20),
+    entregado_factura_emitida character varying(1),
+    pagado_factura_emitida character varying(1),
+    tipo_factura character varying(10),
+    empresa_emisora character varying(30)
+);
+
+
+ALTER TABLE public.facturas_emitidas OWNER TO postgres;
+
+--
+-- Name: licencias_medicas; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE licencias_medicas (
+    rut character varying(10) NOT NULL,
+    fechainicio date NOT NULL,
+    fechatermino date NOT NULL,
+    motivo character varying(60) NOT NULL
+);
+
+
+ALTER TABLE public.licencias_medicas OWNER TO postgres;
+
+--
+-- Name: licenmed; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE licenmed (
+    rut_personal character varying(10) NOT NULL,
+    diagnostico character varying(70) NOT NULL,
+    fechaini date NOT NULL,
+    fechater date NOT NULL,
+    nlicencia integer NOT NULL,
+    cantdias integer NOT NULL
+);
+
+
+ALTER TABLE public.licenmed OWNER TO postgres;
+
+--
+-- Name: pagos; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE pagos (
+    id_pago integer NOT NULL,
+    proveedor character varying(100),
+    tipo_s character varying(100),
+    total integer,
+    observacion character varying(200),
+    fecha date
+);
+
+
+ALTER TABLE public.pagos OWNER TO postgres;
+
+--
+-- Name: pagos_id_pago_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE pagos_id_pago_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pagos_id_pago_seq OWNER TO postgres;
+
+--
+-- Name: pagos_id_pago_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE pagos_id_pago_seq OWNED BY pagos.id_pago;
+
+
+--
+-- Name: pagos_id_pago_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('pagos_id_pago_seq', 1, false);
+
+
+--
+-- Name: personal; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE personal (
+    rut_personal character varying(10) NOT NULL,
+    nombres character varying(30) NOT NULL,
+    apellido1 character varying(20) NOT NULL,
+    apellido2 character varying(20) NOT NULL,
+    fechanaci date NOT NULL,
+    direccion character varying(60) NOT NULL,
+    correo character varying(30),
+    departamento character varying(25) NOT NULL,
+    fechaing date NOT NULL,
+    fechatermino date,
+    dias character varying(10) NOT NULL,
+    horas character varying(10) NOT NULL,
+    fono1 character varying DEFAULT 8,
+    contrato character varying(11) NOT NULL,
+    anexo character varying(7) NOT NULL,
+    salud character varying(20),
+    prevision character varying(20)
+);
+
+
+ALTER TABLE public.personal OWNER TO postgres;
+
+--
+-- Name: proveedor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE proveedor (
+    rut_proveedor character varying(10) NOT NULL,
+    nombre_proveedor character varying(50) NOT NULL,
+    giro_proveedor character varying(50) NOT NULL,
+    direccion_proveedor character varying(50) NOT NULL,
+    telefono_proveedor character varying(16),
+    telefono2_proveedor character varying(16),
+    telefono3_proveedor character varying(16),
+    mail_proveedor character varying(50),
+    descripcion_proveedor character varying(60),
+    web_proveedor character varying(60)
+);
+
+
+ALTER TABLE public.proveedor OWNER TO postgres;
+
+--
+-- Name: proyecto; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE proyecto (
+    cod_proyecto integer NOT NULL,
+    rut_cliente character varying(10) NOT NULL,
+    nombre_proyecto character varying(60) NOT NULL
+);
+
+
+ALTER TABLE public.proyecto OWNER TO postgres;
+
+--
+-- Name: proyecto_cod_proyecto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE proyecto_cod_proyecto_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.proyecto_cod_proyecto_seq OWNER TO postgres;
+
+--
+-- Name: proyecto_cod_proyecto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE proyecto_cod_proyecto_seq OWNED BY proyecto.cod_proyecto;
+
+
+--
+-- Name: proyecto_cod_proyecto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('proyecto_cod_proyecto_seq', 4, true);
+
+
+--
+-- Name: rendicion_tesoreria; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rendicion_tesoreria (
+    cod integer NOT NULL,
+    responsable character varying(50),
+    concepto character varying(100),
+    total integer,
+    tipo character(1),
+    fecha date
+);
+
+
+ALTER TABLE public.rendicion_tesoreria OWNER TO postgres;
+
+--
+-- Name: rendicion_tesoreria_cod_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE rendicion_tesoreria_cod_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rendicion_tesoreria_cod_seq OWNER TO postgres;
+
+--
+-- Name: rendicion_tesoreria_cod_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE rendicion_tesoreria_cod_seq OWNED BY rendicion_tesoreria.cod;
+
+
+--
+-- Name: rendicion_tesoreria_cod_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('rendicion_tesoreria_cod_seq', 3, true);
+
+
+--
+-- Name: ruta; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ruta (
+    cod_ruta integer NOT NULL,
+    origen character varying(20) NOT NULL,
+    destino character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.ruta OWNER TO postgres;
+
+--
+-- Name: ruta_cod_ruta_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE ruta_cod_ruta_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ruta_cod_ruta_seq OWNER TO postgres;
+
+--
+-- Name: ruta_cod_ruta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE ruta_cod_ruta_seq OWNED BY ruta.cod_ruta;
+
+
+--
+-- Name: ruta_cod_ruta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('ruta_cod_ruta_seq', 42, true);
+
+
+--
+-- Name: saldocc; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE saldocc (
+    saldo integer,
+    fecha date
+);
+
+
+ALTER TABLE public.saldocc OWNER TO postgres;
+
+--
+-- Name: servicio_cep; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE servicio_cep (
+    cod_servicio_cep bigint NOT NULL,
+    rut_cliente character varying(10) NOT NULL,
+    fecha date NOT NULL,
+    cod_ruta integer NOT NULL,
+    tipo_servicio character(7) NOT NULL,
+    sobredimen boolean NOT NULL,
+    sobrepeso boolean NOT NULL,
+    escolta boolean NOT NULL,
+    desmov boolean NOT NULL,
+    sobreest integer NOT NULL,
+    proveedor character varying(50) NOT NULL,
+    ot integer NOT NULL,
+    gd character varying(50) NOT NULL,
+    oc integer,
+    cod_tipo_vehiculo integer NOT NULL,
+    patente_vehiculo character varying(6),
+    rut_conductor character varying(10),
+    descripcion character varying(50) NOT NULL,
+    valor_sp bigint NOT NULL,
+    factor_polinomio real NOT NULL,
+    valor_total bigint NOT NULL,
+    facturado boolean
+);
+
+
+ALTER TABLE public.servicio_cep OWNER TO postgres;
+
+--
+-- Name: servicio_cep_cod_servicio_cep_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE servicio_cep_cod_servicio_cep_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.servicio_cep_cod_servicio_cep_seq OWNER TO postgres;
+
+--
+-- Name: servicio_cep_cod_servicio_cep_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE servicio_cep_cod_servicio_cep_seq OWNED BY servicio_cep.cod_servicio_cep;
+
+
+--
+-- Name: servicio_cep_cod_servicio_cep_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('servicio_cep_cod_servicio_cep_seq', 11, true);
+
+
+--
+-- Name: servicio_sep_cod_servicio_sep_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE servicio_sep_cod_servicio_sep_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.servicio_sep_cod_servicio_sep_seq OWNER TO postgres;
+
+--
+-- Name: servicio_sep_cod_servicio_sep_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('servicio_sep_cod_servicio_sep_seq', 4, true);
+
+
+--
+-- Name: servicio_sep; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE servicio_sep (
+    cod_servicios_sep bigint DEFAULT nextval('servicio_sep_cod_servicio_sep_seq'::regclass) NOT NULL,
+    rut_cliente character varying(10) NOT NULL,
+    fecha date NOT NULL,
+    cod_ruta integer NOT NULL,
+    tipo_servicio character(7) NOT NULL,
+    sobredimen boolean NOT NULL,
+    sobrepeso boolean NOT NULL,
+    escolta boolean NOT NULL,
+    desmov boolean NOT NULL,
+    sobreest integer NOT NULL,
+    proveedor character varying(50) NOT NULL,
+    ot integer NOT NULL,
+    gd integer NOT NULL,
+    oc integer,
+    cod_tipo_vehiculo integer NOT NULL,
+    patente_vehiculo character varying(6),
+    rut_conductor character varying(10),
+    descripcion character varying(50) NOT NULL,
+    valor_total bigint NOT NULL,
+    facturado boolean
+);
+
+
+ALTER TABLE public.servicio_sep OWNER TO postgres;
+
+--
+-- Name: sobreestadia; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sobreestadia (
+    cod_sobreestadia integer NOT NULL,
+    cod_tipo_vehiculo integer NOT NULL,
+    valor bigint NOT NULL
+);
+
+
+ALTER TABLE public.sobreestadia OWNER TO postgres;
+
+--
+-- Name: sobreestadia_cod_sobreestadia_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE sobreestadia_cod_sobreestadia_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sobreestadia_cod_sobreestadia_seq OWNER TO postgres;
+
+--
+-- Name: sobreestadia_cod_sobreestadia_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE sobreestadia_cod_sobreestadia_seq OWNED BY sobreestadia.cod_sobreestadia;
+
+
+--
+-- Name: sobreestadia_cod_sobreestadia_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('sobreestadia_cod_sobreestadia_seq', 6, true);
+
+
+--
+-- Name: sueldo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE sueldo (
+    rut_personal character varying(10) NOT NULL,
+    sueldo integer
+);
+
+
+ALTER TABLE public.sueldo OWNER TO postgres;
+
+--
+-- Name: tarifa; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tarifa (
+    cod_tarifa integer NOT NULL,
+    cod_tipo_vehiculo integer NOT NULL,
+    cod_ruta integer NOT NULL,
+    normal bigint NOT NULL,
+    urgente bigint,
+    retorno bigint,
+    sobredimen bigint,
+    sobrepeso bigint,
+    desmov bigint,
+    escolta bigint
+);
+
+
+ALTER TABLE public.tarifa OWNER TO postgres;
+
+--
+-- Name: tarifa_cod_tarifa_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tarifa_cod_tarifa_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tarifa_cod_tarifa_seq OWNER TO postgres;
+
+--
+-- Name: tarifa_cod_tarifa_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tarifa_cod_tarifa_seq OWNED BY tarifa.cod_tarifa;
+
+
+--
+-- Name: tarifa_cod_tarifa_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tarifa_cod_tarifa_seq', 23, true);
+
+
+--
+-- Name: tipo_vehiculo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tipo_vehiculo (
+    cod_tipo_vehiculo integer NOT NULL,
+    tipo_vehiculo character varying(20) NOT NULL,
+    descripcion_tipo_vehiculo character varying(50),
+    kilos integer NOT NULL
+);
+
+
+ALTER TABLE public.tipo_vehiculo OWNER TO postgres;
+
+--
+-- Name: tipo_vehiculo_cod_tipo_vehiculo_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tipo_vehiculo_cod_tipo_vehiculo_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tipo_vehiculo_cod_tipo_vehiculo_seq OWNER TO postgres;
+
+--
+-- Name: tipo_vehiculo_cod_tipo_vehiculo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tipo_vehiculo_cod_tipo_vehiculo_seq OWNED BY tipo_vehiculo.cod_tipo_vehiculo;
+
+
+--
+-- Name: tipo_vehiculo_cod_tipo_vehiculo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tipo_vehiculo_cod_tipo_vehiculo_seq', 8, true);
+
+
+--
+-- Name: usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE usuario (
+    nombre_usuario character varying(15) NOT NULL,
+    password character varying(15) NOT NULL,
+    rut_personal character varying(10),
+    perfil character(1) NOT NULL
+);
+
+
+ALTER TABLE public.usuario OWNER TO postgres;
+
+--
+-- Name: vehiculo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE vehiculo (
+    patente_vehiculo character varying(6) NOT NULL,
+    num_vehiculo integer,
+    cod_tipo_vehiculo integer NOT NULL,
+    kilometraje_vehiculo bigint,
+    ano_vehiculo integer,
+    estado_vehiculo character varying(10),
+    marca character varying(20),
+    modelo character varying(30),
+    revtecnica date,
+    permiso date
+);
+
+
+ALTER TABLE public.vehiculo OWNER TO postgres;
+
+--
+-- Name: id_caja; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE caja_chica ALTER COLUMN id_caja SET DEFAULT nextval('caja_chica_id_caja_seq'::regclass);
+
+
+--
+-- Name: cod_factura_comb; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE facturas_combustible ALTER COLUMN cod_factura_comb SET DEFAULT nextval('facturas_combustible_cod_factura_comb_seq'::regclass);
+
+
+--
+-- Name: cod_factura_compra; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE facturas_compra ALTER COLUMN cod_factura_compra SET DEFAULT nextval('facturas_compra_cod_factura_compra_seq'::regclass);
+
+
+--
+-- Name: id_pago; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE pagos ALTER COLUMN id_pago SET DEFAULT nextval('pagos_id_pago_seq'::regclass);
+
+
+--
+-- Name: cod_proyecto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE proyecto ALTER COLUMN cod_proyecto SET DEFAULT nextval('proyecto_cod_proyecto_seq'::regclass);
+
+
+--
+-- Name: cod; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE rendicion_tesoreria ALTER COLUMN cod SET DEFAULT nextval('rendicion_tesoreria_cod_seq'::regclass);
+
+
+--
+-- Name: cod_ruta; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ruta ALTER COLUMN cod_ruta SET DEFAULT nextval('ruta_cod_ruta_seq'::regclass);
+
+
+--
+-- Name: cod_servicio_cep; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE servicio_cep ALTER COLUMN cod_servicio_cep SET DEFAULT nextval('servicio_cep_cod_servicio_cep_seq'::regclass);
+
+
+--
+-- Name: cod_sobreestadia; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE sobreestadia ALTER COLUMN cod_sobreestadia SET DEFAULT nextval('sobreestadia_cod_sobreestadia_seq'::regclass);
+
+
+--
+-- Name: cod_tarifa; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE tarifa ALTER COLUMN cod_tarifa SET DEFAULT nextval('tarifa_cod_tarifa_seq'::regclass);
+
+
+--
+-- Name: cod_tipo_vehiculo; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE tipo_vehiculo ALTER COLUMN cod_tipo_vehiculo SET DEFAULT nextval('tipo_vehiculo_cod_tipo_vehiculo_seq'::regclass);
+
+
+--
+-- Data for Name: bono; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: caja_chica; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO caja_chica VALUES ('2009-09-03', 'Testers', 'Testing', '', 0, 0, 0, 0, 0, 343234223, 20, 343234223, '44444444-4');
+
+
+--
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO cliente VALUES ('11111111-1', 'cliente1', 'contru', 'undurraga', '84543444', '89344238', '9848484', '894484@nada.cl', 'wwww.33333.sl');
+INSERT INTO cliente VALUES ('2222222-2', 'cliente2', 'constructor', 'nadaaaa', '000000', '8888888', '', 'mailcliente2@hotm.com', 'cliente.com');
+INSERT INTO cliente VALUES ('23233212-2', 'PALEMAR', 'CONSULTORA', 'PSJ SEVILLANA 221', '2332231', '2332231', '', 'PALEMAR@PALEMARCONSULTORES.CL', 'HTTP://WWW.PALEMARCONSULTORES.CL');
+
+
+--
+-- Data for Name: conductor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO conductor VALUES ('12345567-5', '2010-04-30', 'OK', '2010-05-25');
+
+
+--
+-- Data for Name: empresa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO empresa VALUES ('12121212-1', 'Transportes Rojas', 'Dirección 1', '11111111', 'Giro 1');
+
+
+--
+-- Data for Name: facturas_combustible; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO facturas_combustible VALUES (7849, '2009-07-27', '12345678-9', 10000, 1900, 64, 11900, 'combustible', 879384, 82878, '7878', '1', '0', 1);
+INSERT INTO facturas_combustible VALUES (777, '2009-08-06', '12345678-9', 732437, 139163, 878, 871600, 'ssds', 79878, 98798, '98', '1', '0', 2);
+
+
+--
+-- Data for Name: facturas_compra; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO facturas_compra VALUES (2341, '2009-09-01', '15602754-5', 3424234, 650604, 4074838, 'fdasdsad', 2131, 3232, '60', '1', '0', 'c', 27, '12121212-1', '11111111-1', 'n');
+
+
+--
+-- Data for Name: facturas_emitidas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO facturas_emitidas VALUES (1, 12, '2009-05-02', '77777777-8', 100, 19, 119, '', 23, 33, '', '', '', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (2, 3, '2009-07-02', '77777777-8', 10000, 1900, 11900, '2', 2, 2, '2', '', '', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (3, 133, '2009-07-02', '88888888-8', 100, 19, 110, 'transporte 1', 1, 1, '1', '1', '1', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (4, 44, '2009-05-05', '88888888-8', 100000, 19000, 119000, 'transporte 2', 2, 2, '', '', '', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (5, 55, '2009-06-06', '88888888-8', 100000, 19000, 119000, 'transporte 3', 3, 3, '', '', '', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (6, 66, '2009-06-06', '11111111-2', 100000, 19000, 119000, 'transporte 6', 6, 6, '', '', '', NULL, NULL);
+INSERT INTO facturas_emitidas VALUES (7, 7, '2009-07-06', '88888888-8', 100000, 200000, 119000, 'transporte gdfg', 55, 55, '', '', '', NULL, NULL);
+
+
+--
+-- Data for Name: licencias_medicas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: licenmed; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO licenmed VALUES ('15602754-5', 'Gastritis aguda', '2009-08-24', '2009-08-28', 1, 5);
+
+
+--
+-- Data for Name: pagos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: personal; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO personal VALUES ('15602754-5', 'Pablo', 'Pizarro', 'Delgado', '1970-10-13', 'Las Acacias Poniente 495', 'pablopizarro@gmail.com', 'informatica', '2009-01-20', NULL, 'habiles', '17', '2720584', 'definido', '3', 'FONASA', 'no tiene');
+INSERT INTO personal VALUES ('12345567-5', 'Conductor', 'numero', 'uno', '1974-04-10', 'salamanca', NULL, 'operaciones', '1990-04-20', NULL, '20', '22', NULL, 'definido', '23', NULL, NULL);
+INSERT INTO personal VALUES ('11111111-1', 'Adquisidor', 'de', 'Prueba', '1970-10-03', 'dsfdsf', NULL, 'informatica', '1990-04-20', NULL, '20', '30', NULL, 'definido', '32', NULL, NULL);
+INSERT INTO personal VALUES ('44444444-4', 'Caja', 'Chica', 'Prueba', '1970-10-03', 'Valparaiso', NULL, 'informatica', '1990-04-20', NULL, '10', '20', NULL, 'definido', '32', NULL, NULL);
+
+
+--
+-- Data for Name: proveedor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO proveedor VALUES ('15602754-5', 'Pablo Pizarro', 'Testing', 'Viña del Mar', '79783459', '', '', '', '', '');
+
+
+--
+-- Data for Name: proyecto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: rendicion_tesoreria; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO rendicion_tesoreria VALUES (1, 'Pablo Pizarro', 'ingreso de fondos desde tesoreria', 5000000, 'I', '2009-08-27');
+INSERT INTO rendicion_tesoreria VALUES (2, 'Pablo Pizarro', 'gastos comunes', 300000, 'R', '2009-08-27');
+INSERT INTO rendicion_tesoreria VALUES (3, 'Pablo Pizarro', 'ingreso de fondos desde tesoreria', 300000, 'I', '2009-08-27');
+
+
+--
+-- Data for Name: ruta; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO ruta VALUES (37, 'Salamanca', 'Santiago');
+INSERT INTO ruta VALUES (38, 'Santiago', 'Salamanca');
+INSERT INTO ruta VALUES (42, 'Santiago', 'Santiago');
+
+
+--
+-- Data for Name: saldocc; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: servicio_cep; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO servicio_cep VALUES (11, '11111111-1', '2009-08-28', 38, 'normal ', false, false, true, false, 0, 'Bechtel', 654, '764', 324, 6, 'ABCD12', '12345567-5', 'Placas', 440000, 1, 440000, false);
+INSERT INTO servicio_cep VALUES (9, '23233212-2', '2009-08-28', 37, 'normal ', false, false, false, false, 3, 'Bechtel', 23, '34', 234, 6, 'ABCD12', '12345567-5', 'arquitectura', 475000, 1, 475000, false);
+
+
+--
+-- Data for Name: servicio_sep; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO servicio_sep VALUES (2, '2222222-2', '2009-08-27', 37, 'normal ', true, false, true, false, 2, 'Proveedor 1', 23, 34, 234, 6, 'DFG322', 'sc', 'Cobre', 510000, false);
+INSERT INTO servicio_sep VALUES (3, '11111111-1', '2009-08-22', 37, 'urgente', false, true, true, false, 0, 'komatsu', 6365, 123456, 12321, 6, 'PO5873', '12345567-5', 'tuberias', 570000, false);
+INSERT INTO servicio_sep VALUES (4, '11111111-1', '2009-08-27', 37, 'normal ', false, false, false, false, 0, 'Bechtel', 45, 123, 54, 6, 'ABCD12', 'sc', '43', 400000, false);
+
+
+--
+-- Data for Name: sobreestadia; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO sobreestadia VALUES (5, 6, 25000);
+INSERT INTO sobreestadia VALUES (6, 7, 25000);
+
+
+--
+-- Data for Name: sueldo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO sueldo VALUES ('15602754-5', 1200000);
+
+
+--
+-- Data for Name: tarifa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO tarifa VALUES (17, 6, 30, 300000, 500000, 200000, 30000, 20000, 40000, 40000);
+INSERT INTO tarifa VALUES (16, 6, 29, 300000, 500000, 200000, 30000, 20000, 40000, 40000);
+INSERT INTO tarifa VALUES (18, 7, 29, 300000, 400000, 100000, 45000, 34000, 45000, 50000);
+INSERT INTO tarifa VALUES (19, 7, 30, 300000, 400000, 100000, 45000, 34000, 45000, 50000);
+INSERT INTO tarifa VALUES (20, 6, 32, 500000, -1, -1, -1, -1, -1, -1);
+INSERT INTO tarifa VALUES (21, 6, 31, 500000, -1, -1, -1, -1, -1, -1);
+INSERT INTO tarifa VALUES (23, 6, 37, 400000, 500000, 200000, 20000, 30000, 40000, 40000);
+INSERT INTO tarifa VALUES (22, 6, 38, 400000, 500000, 200000, 20000, 30000, 40000, 40000);
+
+
+--
+-- Data for Name: tipo_vehiculo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO tipo_vehiculo VALUES (6, 'cama baja 27ton.', 'Camión soporta hasta 27 toneladas', 27000);
+INSERT INTO tipo_vehiculo VALUES (7, 'Camioneta', '', 5000);
+
+
+--
+-- Data for Name: usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO usuario VALUES ('operador', 'operador', '12345678-9', 'o');
+INSERT INTO usuario VALUES ('adquisidor', 'adquisidor', '11111111-1', 'q');
+INSERT INTO usuario VALUES ('contador', 'contador', '33333333-3', 'c');
+INSERT INTO usuario VALUES ('administrador', 'administrador', '22222222-2', 'a');
+INSERT INTO usuario VALUES ('cajachica', 'cajachica', '44444444-4', 'j');
+INSERT INTO usuario VALUES ('tesorero', 'tesorero', '12345567-5', 't');
+INSERT INTO usuario VALUES ('rrhh', 'rrhh', '5555555-5', 'r');
+
+
+--
+-- Data for Name: vehiculo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO vehiculo VALUES ('ABCD12', 32, 6, NULL, 2009, 'OK', 'KIA', 'truck', '2009-08-29', '2009-08-29');
+
+
+--
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY cliente
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (rut_cliente);
+
+
+--
+-- Name: conductor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY conductor
+    ADD CONSTRAINT conductor_pkey PRIMARY KEY (rut_conductor);
+
+
+--
+-- Name: empresa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY empresa
+    ADD CONSTRAINT empresa_pkey PRIMARY KEY (rut_empresa);
+
+
+--
+-- Name: licenmed_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY licenmed
+    ADD CONSTRAINT licenmed_pkey PRIMARY KEY (nlicencia);
+
+
+--
+-- Name: pagos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY pagos
+    ADD CONSTRAINT pagos_pkey PRIMARY KEY (id_pago);
+
+
+--
+-- Name: personal_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY personal
+    ADD CONSTRAINT personal_pkey PRIMARY KEY (rut_personal);
+
+
+--
+-- Name: proveedor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY proveedor
+    ADD CONSTRAINT proveedor_pkey PRIMARY KEY (rut_proveedor);
+
+
+--
+-- Name: proyecto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY proyecto
+    ADD CONSTRAINT proyecto_pkey PRIMARY KEY (cod_proyecto);
+
+
+--
+-- Name: rendicion_tesoreria_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rendicion_tesoreria
+    ADD CONSTRAINT rendicion_tesoreria_pkey PRIMARY KEY (cod);
+
+
+--
+-- Name: ruta_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ruta
+    ADD CONSTRAINT ruta_pkey PRIMARY KEY (cod_ruta);
+
+
+--
+-- Name: servicio_cep_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY servicio_cep
+    ADD CONSTRAINT servicio_cep_pkey PRIMARY KEY (cod_servicio_cep);
+
+
+--
+-- Name: sobreestadia_cod_tipo_vehiculo_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sobreestadia
+    ADD CONSTRAINT sobreestadia_cod_tipo_vehiculo_key UNIQUE (cod_tipo_vehiculo);
+
+
+--
+-- Name: sobreestadia_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sobreestadia
+    ADD CONSTRAINT sobreestadia_pkey PRIMARY KEY (cod_sobreestadia);
+
+
+--
+-- Name: sueldo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY sueldo
+    ADD CONSTRAINT sueldo_pkey PRIMARY KEY (rut_personal);
+
+
+--
+-- Name: tarifa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tarifa
+    ADD CONSTRAINT tarifa_pkey PRIMARY KEY (cod_tarifa);
+
+
+--
+-- Name: tipo_vehiculo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tipo_vehiculo
+    ADD CONSTRAINT tipo_vehiculo_pkey PRIMARY KEY (cod_tipo_vehiculo);
+
+
+--
+-- Name: usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT usuario_pkey PRIMARY KEY (nombre_usuario);
+
+
+--
+-- Name: vehiculo_num_vehiculo_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY vehiculo
+    ADD CONSTRAINT vehiculo_num_vehiculo_key UNIQUE (num_vehiculo);
+
+
+--
+-- Name: vehiculo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY vehiculo
+    ADD CONSTRAINT vehiculo_pkey PRIMARY KEY (patente_vehiculo);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
