@@ -44,7 +44,7 @@ $ano=$_POST[ano];
 if ($mesa==0)
 	$mesa=12;
 
-$sql2 = "select * from caja_chica where date_part('month',fecha) = $mesa and date_part('Year',fecha)=$ano order by id_caja desc limit 1";
+$sql2 = "select sum(saldo) as saldo from caja_chica where date_part('month',fecha) = $mesa and date_part('Year',fecha)=$ano;";
 
 $ssql2 = pg_exec($dbh,$sql2);
 $aux = pg_fetch_assoc($ssql2);
